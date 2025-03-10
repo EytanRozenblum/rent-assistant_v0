@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -42,8 +43,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-const CURRENT_SUPER = "Mike Johnson";
-
 const viewOptions = {
   day: { label: "Day", days: 1 },
   '3day': { label: "Three Day", days: 3 },
@@ -79,18 +78,13 @@ const updateMockRequestDates = () => {
   });
 };
 
-const SuperintendentCalendar = () => {
+const Calendar = () => {
   const [calendarView, setCalendarView] = useState<string>('week');
   const [selectedDate, setSelectedDate] = useState<Date>(startOfToday());
   const [displayMode, setDisplayMode] = useState<string>('list'); // 'list' or 'hourly'
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   
-  const superintendentRequests = useMemo(() => {
-    const updatedRequests = updateMockRequestDates();
-    return updatedRequests.filter(
-      request => request.assignedTo === CURRENT_SUPER
-    );
-  }, []);
+  const maintenanceRequests = useMemo(() => updateMockRequestDates(), []);
 
   // Calculate date range for the current view
   const dateRange = useMemo(() => {
@@ -111,14 +105,9 @@ const SuperintendentCalendar = () => {
       // For other views, we show the selected number of days
       const days = viewOptions[calendarView as keyof typeof viewOptions]?.days || 7;
       
+      // For week views (5-day and 7-day), adjust to start on Sunday or Monday
       let startDate = today;
-      if (days === 5) {
-        // For 5-day view, get to Monday (1 is Monday, 0 is Sunday)
-        const dayOfWeek = getDay(today);
-        const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-        startDate = sub(today, { days: daysToSubtract });
-      } else if (days === 7) {
-        // For 7-day view, get to Sunday (0)
+      if (days === 5 || days === 7) {
         const dayOfWeek = getDay(today);
         startDate = sub(today, { days: dayOfWeek });
       }
@@ -134,8 +123,6 @@ const SuperintendentCalendar = () => {
   const goToPrevious = () => {
     if (calendarView === 'month') {
       setSelectedDate(sub(selectedDate, { months: 1 }));
-    } else if (calendarView === '3day') {
-      setSelectedDate(sub(selectedDate, { days: 1 }));
     } else {
       const days = viewOptions[calendarView as keyof typeof viewOptions]?.days || 7;
       setSelectedDate(sub(selectedDate, { days }));
@@ -146,8 +133,6 @@ const SuperintendentCalendar = () => {
   const goToNext = () => {
     if (calendarView === 'month') {
       setSelectedDate(add(selectedDate, { months: 1 }));
-    } else if (calendarView === '3day') {
-      setSelectedDate(add(selectedDate, { days: 1 }));
     } else {
       const days = viewOptions[calendarView as keyof typeof viewOptions]?.days || 7;
       setSelectedDate(add(selectedDate, { days }));
@@ -169,7 +154,7 @@ const SuperintendentCalendar = () => {
 
   // Get events for a specific day
   const getEventsForDay = (day: Date) => {
-    return superintendentRequests.filter(request => {
+    return maintenanceRequests.filter(request => {
       const requestDate = request.scheduledDate ? new Date(request.scheduledDate) : new Date(request.dateSubmitted);
       return isSameDay(requestDate, day);
     });
@@ -180,7 +165,7 @@ const SuperintendentCalendar = () => {
     const hourStart = add(startOfDay(day), { hours: hour });
     const hourEnd = add(hourStart, { hours: 1 });
     
-    return superintendentRequests.filter(request => {
+    return maintenanceRequests.filter(request => {
       if (!request.scheduledDate) return false;
       
       let requestStartDate;
@@ -463,7 +448,10 @@ const SuperintendentCalendar = () => {
                                 </div>
                               </div>
                               
-                              <div className="mt-2">
+                              <div className="flex justify-between items-center mt-2">
+                                <div className="text-xs text-muted-foreground">
+                                  Assigned to: {event.assignedTo || 'Unassigned'}
+                                </div>
                                 <Button 
                                   variant="ghost" 
                                   size="sm" 
@@ -861,8 +849,8 @@ const SuperintendentCalendar = () => {
     <div>
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Superintendent Calendar</h1>
-          <p className="text-muted-foreground">Welcome back, {CURRENT_SUPER}</p>
+          <h1 className="text-2xl font-bold">Maintenance Calendar</h1>
+          <p className="text-muted-foreground">All scheduled maintenance</p>
         </div>
         
         <div className="flex gap-3 items-center">
@@ -980,4 +968,4 @@ const SuperintendentCalendar = () => {
   );
 };
 
-export default SuperintendentCalendar;
+export default Calendar;
