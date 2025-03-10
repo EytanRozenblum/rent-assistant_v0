@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppLayout from "./components/layout/AppLayout";
+import SuperintendentLayout from "./components/layout/SuperintendentLayout";
 import Dashboard from "./pages/Dashboard";
 import Leads from "./pages/Leads";
 import Tenants from "./pages/Tenants";
@@ -14,6 +15,7 @@ import PlaceholderPage from "./pages/PlaceholderPage";
 import NotFound from "./pages/NotFound";
 import LandingPage from "./pages/LandingPage";
 import MapView from "./pages/MapView";
+import SuperintendentDashboard from "./pages/SuperintendentDashboard";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +27,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          
+          {/* Admin/Property Manager Routes */}
           <Route path="/dashboard" element={<AppLayout><Dashboard /></AppLayout>} />
           <Route path="/leads" element={<AppLayout><Leads /></AppLayout>} />
           <Route path="/applications" element={<AppLayout><PlaceholderPage /></AppLayout>} />
@@ -36,6 +40,13 @@ const App = () => (
           <Route path="/communications" element={<AppLayout><Communications /></AppLayout>} />
           <Route path="/reports" element={<AppLayout><PlaceholderPage /></AppLayout>} />
           <Route path="/settings" element={<AppLayout><PlaceholderPage /></AppLayout>} />
+          
+          {/* Superintendent Routes */}
+          <Route path="/super" element={<SuperintendentLayout><SuperintendentDashboard /></SuperintendentLayout>} />
+          <Route path="/super/calendar" element={<SuperintendentLayout><PlaceholderPage /></SuperintendentLayout>} />
+          <Route path="/super/map" element={<SuperintendentLayout><MapView /></SuperintendentLayout>} />
+          <Route path="/super/settings" element={<SuperintendentLayout><PlaceholderPage /></SuperintendentLayout>} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

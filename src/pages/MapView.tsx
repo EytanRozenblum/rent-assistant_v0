@@ -1,20 +1,26 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { mockMaintenanceRequests } from '@/data/mockData';
+import PlaceholderPage from './PlaceholderPage';
 
 const MapView = () => {
   const [selectedSuper, setSelectedSuper] = useState<string>('all');
   
-  // Dummy super data - would come from API in real app
-  const supers = ['John Doe', 'Jane Smith', 'Mike Johnson'];
+  // Get unique supers from the same data source
+  const supers = [...new Set(mockMaintenanceRequests.map(req => req.assignedTo).filter(Boolean))];
   
+  // Filter maintenance requests based on selected super
+  const filteredRequests = mockMaintenanceRequests.filter(request => 
+    selectedSuper === 'all' || request.assignedTo === selectedSuper
+  );
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Maintenance Dispatch Map</h1>
+        <h1 className="text-2xl font-bold">Itinerary for {selectedSuper === 'all' ? 'All Supers' : selectedSuper}</h1>
         
         <div className="flex gap-3">
           <Select value={selectedSuper} onValueChange={setSelectedSuper}>
@@ -23,7 +29,7 @@ const MapView = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Supers</SelectItem>
-              {supers.map(sup => (
+              {supers.map(sup => sup && (
                 <SelectItem key={sup} value={sup}>{sup}</SelectItem>
               ))}
             </SelectContent>
@@ -36,38 +42,47 @@ const MapView = () => {
         </div>
       </div>
       
-      <Card className="mb-6">
-        <CardHeader className="pb-3">
-          <CardTitle>Itinerary for {selectedSuper === 'all' ? 'All Supers' : selectedSuper}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="p-6 bg-muted text-center rounded-md">
-            <p className="mb-4 text-muted-foreground">The map feature will display maintenance locations and optimize routes.</p>
-            <p className="text-muted-foreground text-sm">Will integrate with Google Maps for turn-by-turn directions.</p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="mb-6">
+        <PlaceholderPage />
+      </div>
       
       <Card>
         <CardHeader className="pb-3">
           <CardTitle>Today's Stops</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="p-4 border rounded-md">
-              <div className="font-medium">123 Main St, Apt 4B</div>
-              <div className="text-sm text-muted-foreground mt-1">Leaking faucet in bathroom - Scheduled: 10:00 AM</div>
-            </div>
-            
-            <div className="p-4 border rounded-md">
-              <div className="font-medium">456 Oak Ave, Apt 7C</div>
-              <div className="text-sm text-muted-foreground mt-1">AC not working - Scheduled: 11:30 AM</div>
-            </div>
-            
-            <div className="p-4 border rounded-md">
-              <div className="font-medium">789 Pine St, Apt 2A</div>
-              <div className="text-sm text-muted-foreground mt-1">Broken disposal - Scheduled: 2:00 PM</div>
-            </div>
+          <div className="relative w-full">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Tenant</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Unit</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Issue</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Date</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Assigned To</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Pictures</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredRequests.map((request) => (
+                  <tr key={request.id} className="border-b">
+                    <td className="py-3 px-4">{request.tenantName}</td>
+                    <td className="py-3 px-4">{request.unit}</td>
+                    <td className="py-3 px-4">{request.description}</td>
+                    <td className="py-3 px-4">{request.date}</td>
+                    <td className="py-3 px-4">{request.assignedTo || 'Unassigned'}</td>
+                    <td className="py-3 px-4">
+                      <button 
+                        className="text-blue-600 hover:text-blue-800 underline p-0 bg-transparent border-none text-sm"
+                        onClick={() => {/* Handle picture view */}}
+                      >
+                        {`See picture${(request.images?.length || 0) <= 1 ? '' : 's'} (${request.images?.length || 0})`}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </CardContent>
       </Card>

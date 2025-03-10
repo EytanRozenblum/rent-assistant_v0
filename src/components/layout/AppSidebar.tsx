@@ -64,13 +64,13 @@ const AppSidebar = () => {
           </div>
           <NavItem to="/tenants" icon={<Building className="h-5 w-5" />} label="Tenants" />
           <NavItem to="/rent" icon={<CreditCard className="h-5 w-5" />} label="Rent Collection" />
-          <NavItem to="/maintenance" icon={<Wrench className="h-5 w-5" />} label="Maintenance" />
         </div>
         
         <div className="pt-4 pb-2">
           <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
-            Maintenance Staff
+            Renovation, Maintenance, and Turns
           </div>
+          <NavItem to="/maintenance" icon={<Wrench className="h-5 w-5" />} label="Work Orders" />
           <NavItem to="/calendar" icon={<Calendar className="h-5 w-5" />} label="Calendar" />
           <NavItem to="/map" icon={<Map className="h-5 w-5" />} label="Map View" />
         </div>

@@ -1,4 +1,3 @@
-
 import { 
   Lead, 
   Application, 
@@ -24,6 +23,7 @@ export const mockLeads: Lead[] = [
     dateCreated: '2023-09-15',
     nextFollowUp: '2023-09-18',
     tourScheduled: '2023-09-20',
+    assignedTo: 'Sarah Johnson'
   },
   {
     id: '2',
@@ -37,6 +37,7 @@ export const mockLeads: Lead[] = [
     dateCreated: '2023-09-10',
     nextFollowUp: '2023-09-17',
     tourScheduled: '2023-09-19',
+    assignedTo: 'Mike Brown'
   },
   {
     id: '3',
@@ -50,6 +51,7 @@ export const mockLeads: Lead[] = [
     dateCreated: '2023-09-05',
     nextFollowUp: '2023-09-16',
     tourScheduled: null,
+    assignedTo: 'Alex Rodriguez'
   },
   {
     id: '4',
@@ -63,6 +65,7 @@ export const mockLeads: Lead[] = [
     dateCreated: '2023-09-12',
     nextFollowUp: '2023-09-19',
     tourScheduled: '2023-09-21',
+    assignedTo: 'Emily Wilson'
   },
   {
     id: '5',
@@ -76,6 +79,7 @@ export const mockLeads: Lead[] = [
     dateCreated: '2023-09-08',
     nextFollowUp: '2023-09-18',
     tourScheduled: '2023-09-22',
+    assignedTo: 'James Taylor'
   },
 ];
 
@@ -93,6 +97,7 @@ export const mockApplications: Application[] = [
     backgroundCheck: 'approved',
     creditCheck: 'pending',
     incomeVerification: 'approved',
+    assignedTo: 'Sarah Johnson'
   },
   {
     id: '2',
@@ -106,6 +111,7 @@ export const mockApplications: Application[] = [
     backgroundCheck: 'approved',
     creditCheck: 'approved',
     incomeVerification: 'approved',
+    assignedTo: 'Mike Brown'
   },
   {
     id: '3',
@@ -119,6 +125,7 @@ export const mockApplications: Application[] = [
     backgroundCheck: 'pending',
     creditCheck: 'pending',
     incomeVerification: 'pending',
+    assignedTo: 'Emily Wilson'
   },
 ];
 
@@ -135,6 +142,7 @@ export const mockTenants: Tenant[] = [
     rentAmount: 1450,
     status: 'active',
     rentStatus: 'paid',
+    region: 'North'
   },
   {
     id: '2',
@@ -147,6 +155,7 @@ export const mockTenants: Tenant[] = [
     rentAmount: 1700,
     status: 'active',
     rentStatus: 'pending',
+    region: 'South'
   },
   {
     id: '3',
@@ -159,6 +168,7 @@ export const mockTenants: Tenant[] = [
     rentAmount: 1950,
     status: 'active',
     rentStatus: 'overdue',
+    region: 'East'
   },
   {
     id: '4',
@@ -171,6 +181,7 @@ export const mockTenants: Tenant[] = [
     rentAmount: 1500,
     status: 'active',
     rentStatus: 'paid',
+    region: 'West'
   },
   {
     id: '5',
@@ -183,6 +194,7 @@ export const mockTenants: Tenant[] = [
     rentAmount: 1650,
     status: 'active',
     rentStatus: 'paid',
+    region: 'Central'
   },
 ];
 
@@ -200,6 +212,7 @@ export const mockMaintenanceRequests: MaintenanceRequest[] = [
     priority: 'normal',
     assignedTo: 'Mike Johnson',
     scheduledDate: '2023-09-18',
+    region: 'North'
   },
   {
     id: '2',
@@ -213,6 +226,7 @@ export const mockMaintenanceRequests: MaintenanceRequest[] = [
     priority: 'urgent',
     assignedTo: 'Alex Rodriguez',
     scheduledDate: '2023-09-15',
+    region: 'East'
   },
   {
     id: '3',
@@ -226,6 +240,7 @@ export const mockMaintenanceRequests: MaintenanceRequest[] = [
     priority: 'normal',
     assignedTo: 'Mike Johnson',
     scheduledDate: '2023-09-11',
+    region: 'South'
   },
   {
     id: '4',
@@ -239,6 +254,7 @@ export const mockMaintenanceRequests: MaintenanceRequest[] = [
     priority: 'urgent',
     assignedTo: null,
     scheduledDate: null,
+    region: 'Central'
   },
   {
     id: '5',
@@ -252,6 +268,7 @@ export const mockMaintenanceRequests: MaintenanceRequest[] = [
     priority: 'low',
     assignedTo: 'Alex Rodriguez',
     scheduledDate: '2023-09-19',
+    region: 'West'
   },
 ];
 
@@ -481,3 +498,4 @@ export const mockMaintenanceData: ChartData[] = [
   { name: 'Structural', value: 8 },
   { name: 'Other', value: 5 },
 ];
+

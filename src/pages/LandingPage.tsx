@@ -25,13 +25,24 @@ const LandingPage = () => {
           resolutions by supercharging property manager productivity.
         </p>
         
-        <Button 
-          size="lg" 
-          className="text-lg px-8 py-6 h-auto"
-          onClick={() => navigate('/dashboard')}
-        >
-          Enter Dashboard
-        </Button>
+        <div className="flex flex-col md:flex-row gap-4">
+          <Button 
+            size="lg" 
+            className="text-lg px-8 py-6 h-auto"
+            onClick={() => navigate('/dashboard')}
+          >
+            Property Manager Dashboard
+          </Button>
+          
+          <Button 
+            size="lg" 
+            variant="outline"
+            className="text-lg px-8 py-6 h-auto"
+            onClick={() => navigate('/super')}
+          >
+            Superintendent Access
+          </Button>
+        </div>
         
         <div className="mt-32">
           <p className="text-lg font-medium text-gray-700 mb-8">
