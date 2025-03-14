@@ -1,116 +1,111 @@
-
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Wrench, ClipboardList, Calendar, MessageSquare } from 'lucide-react';
+import { Phone } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-interface TenantMaintenanceProps {
-  scenario: 'request' | 'workorder' | 'scheduling' | 'relationship';
-}
-
-const TenantMaintenance = ({ scenario }: TenantMaintenanceProps) => {
-  const renderScenarioContent = () => {
-    switch (scenario) {
-      case 'request':
+const TenantMaintenance = () => {
+  const [phoneState, setPhoneState] = useState('contact');
+  const [callTime, setCallTime] = useState(0);
+  const [showClock, setShowClock] = useState(false);
+  const videoRef = useRef(null);
+  const timerRef = useRef(null);
+  
+  useEffect(() => {
+    // Cleanup timer on component unmount
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
+  
+  const startCallSimulation = () => {
+    // First transition to calling screen
+    setPhoneState('calling');
+    
+    // After 2 seconds, transition to in-call and start the clock
+    setTimeout(() => {
+      setPhoneState('in-call');
+      setShowClock(true);
+      
+      // Start the call timer
+      timerRef.current = setInterval(() => {
+        setCallTime(prev => prev + 1);
+      }, 1000);
+      
+    }, 2000);
+    
+    // Start the video after 2 seconds
+    setTimeout(() => {
+      if (videoRef.current) {
+        videoRef.current.play();
+      }
+    }, 2000);
+  };
+  
+  const formatCallTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' + secs : secs}`;
+  };
+  
+  const renderPhoneScreen = () => {
+    switch (phoneState) {
+      case 'contact':
+        return <img src="/contact_screen.png" alt="Contact screen" className="w-full rounded-lg shadow-lg" />;
+      case 'calling':
+        return <img src="/calling_screen.png" alt="Calling screen" className="w-full rounded-lg shadow-lg" />;
+      case 'in-call':
         return (
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium flex items-center">
-              <Wrench className="h-5 w-5 mr-2" />
-              Maintenance Request
-            </h3>
-            <p className="text-sm">
-              My kitchen sink is leaking and there's water under the cabinet.
-              How do I submit a maintenance request?
-            </p>
-            <div className="border-t border-gray-200 pt-2 mt-2">
-              <p className="text-xs text-gray-500">Sample conversation starters:</p>
-              <ul className="text-xs text-gray-700 list-disc list-inside mt-1">
-                <li>Is there an emergency maintenance number?</li>
-                <li>Do I need to be home when maintenance arrives?</li>
-                <li>How quickly will someone come to fix this issue?</li>
-                <li>Can I upload photos of the problem?</li>
-              </ul>
-            </div>
+          <div className="relative">
+            <img src="/in_call_screen.png" alt="In-call screen" className="w-full rounded-lg shadow-lg" />
+            {showClock && (
+              <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 text-white text-lg font-mono">
+                {formatCallTime(callTime)}
+              </div>
+            )}
           </div>
         );
-      
-      case 'workorder':
-        return (
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium flex items-center">
-              <ClipboardList className="h-5 w-5 mr-2" />
-              Work Order Triage
-            </h3>
-            <p className="text-sm">
-              I submitted a request about my AC not working, but I haven't heard back.
-              Can you check the status of my work order?
-            </p>
-            <div className="border-t border-gray-200 pt-2 mt-2">
-              <p className="text-xs text-gray-500">Sample conversation starters:</p>
-              <ul className="text-xs text-gray-700 list-disc list-inside mt-1">
-                <li>What's the typical response time for AC issues?</li>
-                <li>Can you escalate my work order to urgent?</li>
-                <li>Has a technician been assigned to my case?</li>
-                <li>The issue is getting worse - what should I do?</li>
-              </ul>
-            </div>
-          </div>
-        );
-      
-      case 'scheduling':
-        return (
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium flex items-center">
-              <Calendar className="h-5 w-5 mr-2" />
-              Maintenance Scheduling
-            </h3>
-            <p className="text-sm">
-              I received notification that a technician will visit, but I need to
-              reschedule. How can I set a different appointment time?
-            </p>
-            <div className="border-t border-gray-200 pt-2 mt-2">
-              <p className="text-xs text-gray-500">Sample conversation starters:</p>
-              <ul className="text-xs text-gray-700 list-disc list-inside mt-1">
-                <li>What time slots are available this week?</li>
-                <li>Can we schedule an appointment after 5pm?</li>
-                <li>How much notice do I need to give to reschedule?</li>
-                <li>Will I receive a reminder before the appointment?</li>
-              </ul>
-            </div>
-          </div>
-        );
-      
-      case 'relationship':
-        return (
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium flex items-center">
-              <MessageSquare className="h-5 w-5 mr-2" />
-              Tenant Relationship
-            </h3>
-            <p className="text-sm">
-              I've had multiple maintenance issues this month. I'd like to discuss 
-              my concerns about the property condition.
-            </p>
-            <div className="border-t border-gray-200 pt-2 mt-2">
-              <p className="text-xs text-gray-500">Sample conversation starters:</p>
-              <ul className="text-xs text-gray-700 list-disc list-inside mt-1">
-                <li>Can I schedule a meeting with the property manager?</li>
-                <li>What's the plan for addressing recurring issues?</li>
-                <li>How do I provide feedback about maintenance service?</li>
-                <li>Are there any planned upgrades for this unit?</li>
-              </ul>
-            </div>
-          </div>
-        );
-      
       default:
-        return <p>Select a maintenance scenario from the sidebar.</p>;
+        return <img src="/contact_screen.png" alt="Contact screen" className="w-full rounded-lg shadow-lg" />;
     }
   };
   
   return (
-    <Card className="shadow-none border-none">
-      <CardContent className="p-0">
-        {renderScenarioContent()}
+    <Card className="shadow-md">
+      <CardContent className="p-6">
+        <h3 className="text-xl font-medium flex items-center mb-6">
+          <Phone className="h-5 w-5 mr-2" />
+          Property AI Call Assistant
+        </h3>
+        
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="md:w-1/2">
+            {renderPhoneScreen()}
+          </div>
+          
+          <div className="md:w-1/2">
+            <video 
+              ref={videoRef}
+              src="/lead.mp4" 
+              className="w-full rounded-lg shadow-lg" 
+              controls
+              preload="auto"
+            />
+          </div>
+        </div>
+        
+        <div className="flex justify-center mt-8">
+          <Button 
+            size="lg" 
+            className="px-8 py-2"
+            onClick={startCallSimulation}
+            disabled={phoneState !== 'contact'}
+          >
+            <Phone className="mr-2 h-5 w-5" />
+            Simulate Property Call
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

@@ -1,11 +1,97 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import AppLogo from '@/components/layout/AppLogo';
-import { ArrowRight, Check, BarChart3, MessageSquare, Clock, ArrowUpRight, Building2 } from 'lucide-react';
+import { ArrowRight, Check, BarChart3, MessageSquare, Clock, ArrowUpRight, Building2, Phone, PhoneOff } from 'lucide-react';
+import { FaPhone } from "react-icons/fa6";
+import { Card, CardContent } from '@/components/ui/card';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [phoneState, setPhoneState] = useState('contact');
+  const [callTime, setCallTime] = useState(0);
+  const [showClock, setShowClock] = useState(false);
+  const videoRef = useRef(null);
+  const timerRef = useRef(null);
+  
+  useEffect(() => {
+    // Cleanup timer on component unmount
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
+  
+  const startCallSimulation = () => {
+    // First transition to calling screen
+    setPhoneState('calling');
+    
+    // After 2 seconds, transition to in-call and start the clock
+    setTimeout(() => {
+      setPhoneState('in-call');
+      setShowClock(true);
+      
+      // Start the call timer
+      timerRef.current = setInterval(() => {
+        setCallTime(prev => prev + 1);
+      }, 1000);
+      
+    }, 2000);
+    
+    // Start the video after 2 seconds
+    setTimeout(() => {
+      if (videoRef.current) {
+        videoRef.current.play();
+      }
+    }, 2000);
+  };
+  
+  const endCallSimulation = () => {
+    // Stop the timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    
+    // Reset the call state
+    setPhoneState('contact');
+    setCallTime(0);
+    setShowClock(false);
+    
+    // Pause and reset the video
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
+  
+  const formatCallTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' + secs : secs}`;
+  };
+  
+  const renderPhoneScreen = () => {
+    switch (phoneState) {
+      case 'contact':
+        return <img src="/phone_screens/contact_screen.png" alt="Contact screen" className="w-full rounded-lg" />;
+      case 'calling':
+        return <img src="/phone_screens/calling_screen.png" alt="Calling screen" className="w-full rounded-lg" />;
+      case 'in-call':
+        return (
+          <div className="relative">
+            <img src="/phone_screens/in_call_screen.png" alt="In-call screen" className="w-full rounded-lg" />
+            {showClock && (
+              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 text-white text-xl font-semibold">
+                {formatCallTime(callTime)}
+              </div>
+            )}
+          </div>
+        );
+      default:
+        return <img src="/phone_screens/contact_screen.png" alt="Contact screen" className="w-full rounded-lg" />;
+    }
+  };
   
   return (
     <div className="min-h-screen bg-white">
@@ -18,6 +104,7 @@ const LandingPage = () => {
         <nav className="hidden md:flex items-center space-x-10">
           <a href="#features" className="text-gray-700 hover:text-primary transition-colors font-medium">Features</a>
           <a href="#benefits" className="text-gray-700 hover:text-primary transition-colors font-medium">Benefits</a>
+          <a href="#demo" className="text-gray-700 hover:text-primary transition-colors font-medium">Demo</a>
           <a href="#testimonials" className="text-gray-700 hover:text-primary transition-colors font-medium">Case Studies</a>
         </nav>
         
@@ -27,7 +114,7 @@ const LandingPage = () => {
             onClick={() => navigate('/login')}
             className="hidden md:flex items-center gap-1"
           >
-            Try Demo
+            Try Demo Dashboard
             <ArrowRight className="ml-1 h-4 w-4" />
           </Button>
         </div>
@@ -258,8 +345,71 @@ const LandingPage = () => {
         </div>
       </section>
       
+      {/* Tool Preview Section */}
+      <section id="demo" className="py-20 px-8 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-14">
+            <div className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-3">
+              Interactive Demo
+            </div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">See Our AI Call Assistant in Action</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Experience how our AI handles property inquiries, providing instant, professional responses to potential tenants.
+            </p>
+          </div>
+          
+          <div className="space-y-8">
+            <div className="flex justify-center items-center">
+              {phoneState === 'contact' ? (
+                <button 
+                  onClick={startCallSimulation}
+                  className="flex items-center gap-3 group"
+                >
+                  <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center shadow-lg transition-all hover:bg-green-600">
+                    <Phone className="h-8 w-8 text-white" stroke="white" />
+                  </div>
+                  <span className="text-xl font-medium text-gray-800">Call Property AI</span>
+                </button>
+              ) : (
+                <button 
+                  onClick={endCallSimulation}
+                  className="flex items-center gap-3 group"
+                >
+                  <div className="w-16 h-16 rounded-full bg-red-500 flex items-center justify-center shadow-lg transition-all hover:bg-red-600">
+                    <PhoneOff className="h-8 w-8 text-white" stroke="white" />
+                  </div>
+                  <span className="text-xl font-medium text-gray-800">End Call</span>
+                </button>
+              )}
+            </div>
+            
+            <Card className="bg-white shadow-lg border rounded-2xl overflow-hidden">
+              <CardContent className="p-6 md:p-10">
+                <div className="flex flex-col md:flex-row gap-8 items-center">
+                  <div className="md:w-[45%] flex justify-center items-center">
+                    <div className="max-w-[280px] mx-auto">
+                      {renderPhoneScreen()}
+                    </div>
+                  </div>
+                  
+                  <div className="md:w-[55%] flex items-center">
+                    <video 
+                      ref={videoRef}
+                      src="/phone_calls/leasing/lead.mp4" 
+                      className="w-full rounded-lg" 
+                      preload="auto"
+                      controls={false}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+      
       {/* Testimonials Section (Placeholder) */}
-      <section id="testimonials" className="py-20 px-8 bg-white">
+      <section id="testimonials" className="py-20 px-8 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
             <div className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium mb-3">
@@ -271,7 +421,7 @@ const LandingPage = () => {
             </p>
           </div>
           
-          <div className="border-2 border-dashed border-gray-300 rounded-xl p-16 text-center bg-gray-50 hover:bg-gray-100 transition-colors">
+          <div className="border-2 border-dashed border-gray-300 rounded-xl p-16 text-center bg-white hover:bg-gray-100 transition-colors">
             <p className="text-gray-500 text-xl font-medium">Case studies coming soon</p>
           </div>
         </div>
