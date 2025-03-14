@@ -1,18 +1,21 @@
 
-export type Status = 
-  | 'pending' 
-  | 'active' 
-  | 'completed' 
-  | 'overdue' 
-  | 'canceled'
-  | 'approved'
-  | 'rejected'
-  | 'reviewing'
-  | 'scheduled'
-  | 'maintenance'
-  | 'urgent'
-  | 'normal'
-  | 'low';
+export interface AIConversation {
+  id: string;
+  contactName: string;
+  dateTime: string;
+  channel: 'voice' | 'sms' | 'email';
+  summary: string;
+  transcript: string;
+  sentiment: 'positive' | 'neutral' | 'negative';
+  actionItems: string[];
+  scenario?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  systemLinks?: string[];
+  relatedTo?: string;
+}
+
+export type LeadStatus = 'new' | 'contacted' | 'tour_scheduled' | 'application_sent' | 'application_received' | 'pending' | 'scheduled' | 'completed' | 'approved' | 'active';
 
 export interface Lead {
   id: string;
@@ -20,106 +23,114 @@ export interface Lead {
   email: string;
   phone: string;
   propertyInterest: string;
-  source: string;
-  status: Status;
-  notes: string;
+  unitInterest?: string;
   dateCreated: string;
-  nextFollowUp: string | null;
-  tourScheduled: string | null;
-  assignedTo: string;  // Leasing agent
+  market: string;
+  community: string;
+  assignedTo: string;
+  status: LeadStatus;
+  tourScheduled?: string;
+  tourDateTime?: string;
+  notes?: string;
+  lastContact?: string;
+  source?: string;
 }
+
+export type ApplicationStatus = 'pending' | 'approved' | 'denied' | 'reviewing';
 
 export interface Application {
   id: string;
-  leadId: string;
-  name: string;
+  applicantName: string;
   email: string;
   phone: string;
-  propertyInterest: string;
-  status: Status;
+  unitType: string;
   dateSubmitted: string;
-  backgroundCheck: 'pending' | 'approved' | 'rejected';
-  creditCheck: 'pending' | 'approved' | 'rejected';
-  incomeVerification: 'pending' | 'approved' | 'rejected';
-  assignedTo: string;  // Leasing agent
+  status: ApplicationStatus;
+  assignedTo?: string;
+  propertyInterest?: string;
+  backgroundCheck?: {
+    status: 'pending' | 'completed' | 'failed';
+    score?: number;
+  };
+  creditCheck?: {
+    status: 'pending' | 'completed' | 'failed';
+    score?: number;
+  };
+  incomeVerification?: {
+    status: 'pending' | 'completed' | 'failed';
+    verified: boolean;
+  };
+  leadId?: string;
 }
+
+export type TenantStatus = 'active' | 'inactive' | 'notice';
+export type RentStatus = 'current' | 'delinquent' | 'paid' | 'pending';
 
 export interface Tenant {
   id: string;
   name: string;
   email: string;
-  phone: string;
+  phone?: string;
   unit: string;
-  leaseStart: string;
+  community: string;
+  market: string;
   leaseEnd: string;
+  leaseStart?: string;
+  status: TenantStatus;
+  rentStatus: RentStatus;
+  propertyManager: string;
   rentAmount: number;
-  status: 'active' | 'inactive' | 'pending';
-  rentStatus: 'paid' | 'pending' | 'overdue';
-  region: string;
+  notes?: string;
+  moveInDate: string;
+  delinquentAmount?: number;
 }
+
+export type MaintenanceStatus = 'new' | 'assigned' | 'in_progress' | 'completed' | 'pending' | 'scheduled';
+export type PriorityLevel = 'low' | 'medium' | 'high' | 'urgent' | 'normal';
 
 export interface MaintenanceRequest {
   id: string;
-  tenantId: string;
   tenantName: string;
   unit: string;
   issue: string;
   description: string;
   dateSubmitted: string;
-  status: Status;
-  priority: 'urgent' | 'normal' | 'low';
-  assignedTo: string | null;
-  scheduledDate: string | null;
-  region: string;
+  status: MaintenanceStatus;
+  priority: PriorityLevel;
+  assignedTo?: string;
+  scheduledDate?: string;
+  endDate?: string;
+  community?: string;
+  tenantId?: string;
 }
 
-export interface AIConversation {
-  id: string;
-  relatedTo: 'lead' | 'tenant' | 'maintenance' | 'general';
-  relatedId: string | null;
-  contactName: string;
-  contactType: 'lead' | 'tenant' | 'vendor' | 'other';
-  channel: 'voice' | 'sms' | 'email';
-  dateTime: string;
-  transcript: string;
-  summary: string;
-  sentiment: 'positive' | 'neutral' | 'negative';
-  actionItems: string[];
-}
+export type PaymentStatus = 'pending' | 'paid' | 'overdue' | 'delinquent';
 
 export interface RentPayment {
   id: string;
-  tenantId: string;
   tenantName: string;
   unit: string;
   amount: number;
   dueDate: string;
-  datePaid: string | null;
-  status: 'paid' | 'pending' | 'overdue';
-  paymentMethod: 'bank' | 'card' | 'cash' | 'check' | null;
+  status: PaymentStatus;
+  paymentDate?: string;
+  paymentMethod?: string;
+  datePaid?: string;
+  propertyManager?: string;
+  tenantId?: string;
 }
+
+export type MetricChangeStatus = 'neutral' | 'up' | 'down' | 'increase_good' | 'increase_bad' | 'decrease_good' | 'decrease_bad';
 
 export interface MetricData {
-  label: string;
-  value: number;
-  previousValue?: number;
-  change?: number;
-  status?: 'increase' | 'decrease' | 'neutral';
-}
-
-export interface ChartData {
-  name: string;
-  value: number;
-}
-
-export interface SuperItinerary {
-  id: string;
-  name: string;
-  locations: {
-    address: string;
-    lat: number;
-    lng: number;
-    requestId: string;
-    description: string;
+  title: string;
+  value: number | string;
+  change: number;
+  status: MetricChangeStatus;
+  timeframe: string;
+  format?: string;
+  markets?: {
+    name: string;
+    value: number;
   }[];
 }

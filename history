@@ -1,0 +1,54 @@
+pnpm i
+pnpm add -g pnpm
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+git reset --hard 879eebd22dda8e3df64e4e841706e15ed4171230
+git reset --hard HEAD~3
+git reset --hard 879eebd22dda8e3df64e4e841706e15ed4171230
+git push --force origin main
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm install @headlessui/react
+pnpm approve-builds
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+git reset --hard d5d13728984024a072e26e57ef19270e1f328d28\
+
+git push --force
+pnpm run dev
+pnpm run dev
+pnpm run dev
+git reset --hard b8e461fdb6fe88a0ead67584fca2b5ac4a389e12
+git push --force origin main
+pnpm run dev
+pnpm run dev
+git resert --hard 78815f76469fbeaa025c5ca2e24e253bcf0d254a
+git reset --hard 78815f76469fbeaa025c5ca2e24e253bcf0d254a
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev
+pnpm run dev

@@ -43,6 +43,11 @@
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 200 30% 90%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* iOS colors */
+    --ios-blue: 211 100% 50%;
+    --ios-gray: 240 4% 95%;
+    --ios-dark-gray: 240 3% 40%;
   }
 
   .dark {
@@ -82,6 +87,11 @@
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 200 30% 20%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* iOS colors dark mode */
+    --ios-blue: 211 100% 60%;
+    --ios-gray: 240 4% 15%;
+    --ios-dark-gray: 240 3% 70%;
   }
 }
 
@@ -95,6 +105,21 @@
   }
 }
 
+/* Add card button styles */
+.add-card-button {
+  @apply flex items-center justify-center gap-2 border-dashed border-2 border-gray-200 rounded-lg bg-white text-gray-500 hover:bg-gray-50 transition-colors cursor-pointer;
+}
+
+.add-card-button-sm {
+  @apply flex items-center justify-center gap-2 h-10 border-dashed border-2 border-gray-200 rounded-lg bg-white text-gray-500 hover:bg-gray-50 transition-colors px-4;
+}
+
+/* Card action buttons */
+.card-actions {
+  @apply opacity-0 transition-opacity group-hover:opacity-100 absolute top-2 right-2 flex items-center gap-1 z-10;
+}
+
+/* Table styles */
 .table-container {
   @apply w-full overflow-x-auto;
 }
@@ -139,7 +164,7 @@
   @apply bg-blue-100 text-blue-800;
 }
 
-.status-badge.overdue {
+.status-badge.delinquent {
   @apply bg-red-100 text-red-800;
 }
 
@@ -149,4 +174,74 @@
 
 .status-badge.inactive {
   @apply bg-gray-100 text-gray-800;
+}
+
+/* Sound wave animation */
+@keyframes soundwave {
+  0% {
+    height: 5px;
+  }
+  50% {
+    height: 30px;
+  }
+  100% {
+    height: 5px;
+  }
+}
+
+/* Call button animation */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+}
+
+/* iOS style components */
+.ios-button {
+  @apply rounded-full flex items-center justify-center;
+}
+
+.ios-button:active {
+  @apply opacity-70;
+}
+
+.ios-blue-text {
+  @apply text-blue-500;
+}
+
+.ios-status-bar {
+  @apply flex justify-between items-center px-5 py-2;
+}
+
+.ios-phone-button {
+  @apply flex items-center justify-center w-16 h-16 rounded-full;
+}
+
+.ios-phone-button.call {
+  animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+}
+
+.ios-tabbar {
+  @apply flex justify-around items-center h-16 bg-white border-t border-gray-200;
+}
+
+.ios-tabbar-item {
+  @apply flex flex-col items-center;
+}
+
+.ios-call-screen {
+  @apply flex flex-col h-full bg-gray-700;
+}
+
+.ios-call-button-row {
+  @apply flex justify-around mb-8;
 }
